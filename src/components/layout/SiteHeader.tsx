@@ -123,7 +123,7 @@ export function SiteHeader() {
           <Wordmark className="text-2xl" interactive />
         </Link>
 
-        <nav className="hidden items-center gap-12 md:flex">
+        <nav className="hidden items-center gap-12 md:flex" aria-label="Main">
           {NAV.map((item) => (
             <Link
               key={item.href}
@@ -148,7 +148,7 @@ export function SiteHeader() {
           </Magnetic>
         </nav>
 
-        <nav className="flex items-center gap-6 md:hidden">
+        <nav className="flex items-center gap-6 md:hidden" aria-label="Main">
           <Link
             href="/menu"
             className="nav-link"

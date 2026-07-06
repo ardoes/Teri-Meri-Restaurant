@@ -1,43 +1,59 @@
 import type { Metadata } from "next";
 import { CartProvider } from "@/context/CartContext";
 import { MenuPageClient } from "@/components/menu/MenuPageClient";
-import { OG_IMAGE_PATH, MENU_URL, SITE_NAME } from "@/lib/site-seo";
-
-const menuTitle = "The Menu · Teri Meri";
-const menuDescription =
-  "Browse the full Teri Meri menu — biryani, tandoor, Chinese, curries, and more. Order by phone or WhatsApp.";
+import {
+  getMenuJsonLd,
+  jsonLdScript,
+  MENU_DESCRIPTION,
+  MENU_KEYWORDS,
+  MENU_TITLE,
+  MENU_URL,
+  OG_IMAGE_METADATA,
+  SITE_NAME,
+} from "@/lib/site-seo";
 
 export const metadata: Metadata = {
   title: "The Menu",
-  description: menuDescription,
+  description: MENU_DESCRIPTION,
+  keywords: MENU_KEYWORDS,
   alternates: {
     canonical: MENU_URL,
   },
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
-    title: menuTitle,
-    description: menuDescription,
+    title: MENU_TITLE,
+    description: MENU_DESCRIPTION,
     type: "website",
+    locale: "en_SA",
     url: MENU_URL,
     siteName: SITE_NAME,
-    images: [
-      {
-        url: OG_IMAGE_PATH,
-        alt: "Teri Meri dining room with tables ready for guests",
-      },
-    ],
+    images: [OG_IMAGE_METADATA],
   },
   twitter: {
     card: "summary_large_image",
-    title: menuTitle,
-    description: menuDescription,
-    images: [OG_IMAGE_PATH],
+    title: MENU_TITLE,
+    description: MENU_DESCRIPTION,
+    images: [OG_IMAGE_METADATA.url],
   },
 };
 
 export default function MenuPage() {
+  const menuJsonLd = getMenuJsonLd();
+
   return (
-    <CartProvider>
-      <MenuPageClient />
-    </CartProvider>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLdScript(menuJsonLd),
+        }}
+      />
+      <CartProvider>
+        <MenuPageClient />
+      </CartProvider>
+    </>
   );
 }

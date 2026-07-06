@@ -11,9 +11,16 @@ import { GoToTopButton } from "@/components/ui/GoToTopButton";
 import { MainContent, PageTransition } from "@/components/layout/MainContent";
 import {
   getRestaurantJsonLd,
-  OG_IMAGE_PATH,
+  getWebSiteJsonLd,
+  HOME_DESCRIPTION,
+  HOME_KEYWORDS,
+  HOME_OG_DESCRIPTION,
+  HOME_TITLE,
+  jsonLdScript,
+  OG_IMAGE_METADATA,
   SITE_NAME,
   SITE_URL,
+  THEME_COLOR,
 } from "@/lib/site-seo";
 
 const fraunces = Fraunces({
@@ -36,51 +43,50 @@ const fredoka = Fredoka({
   weight: ["500", "600", "700"],
 });
 
-const homeDescription =
-  "Teri Meri is a luxury Indian dining experience — heritage recipes reimagined with cinematic craft, warmth and soul.";
-
-const homeOgDescription =
-  "A luxury Indian dining experience — heritage recipes reimagined with cinematic craft.";
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Teri Meri — Modern Indian Fine Dining",
+    default: HOME_TITLE,
     template: "%s · Teri Meri",
   },
-  description: homeDescription,
-  keywords: [
-    "Teri Meri",
-    "luxury Indian restaurant",
-    "modern Indian fine dining",
-    "Indian tasting menu",
-  ],
+  description: HOME_DESCRIPTION,
+  keywords: HOME_KEYWORDS,
+  applicationName: SITE_NAME,
   alternates: {
     canonical: `${SITE_URL}/`,
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
-    title: "Teri Meri — Modern Indian Fine Dining",
-    description: homeOgDescription,
+    title: HOME_TITLE,
+    description: HOME_OG_DESCRIPTION,
     type: "website",
-    locale: "en_US",
+    locale: "en_SA",
     url: "/",
     siteName: SITE_NAME,
-    images: [
-      {
-        url: OG_IMAGE_PATH,
-        alt: "Teri Meri dining room with tables ready for guests",
-      },
-    ],
+    images: [OG_IMAGE_METADATA],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Teri Meri — Modern Indian Fine Dining",
-    description: homeOgDescription,
-    images: [OG_IMAGE_PATH],
+    title: HOME_TITLE,
+    description: HOME_OG_DESCRIPTION,
+    images: [OG_IMAGE_METADATA.url],
   },
   icons: {
     icon: [{ url: "/icon.png", type: "image/png", sizes: "512x512" }],
     apple: [{ url: "/apple-icon.png", type: "image/png", sizes: "180x180" }],
+  },
+  manifest: "/manifest.webmanifest",
+  other: {
+    "theme-color": THEME_COLOR,
   },
 };
 
@@ -88,6 +94,7 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover" as const,
+  themeColor: THEME_COLOR,
 };
 
 export default function RootLayout({
@@ -96,6 +103,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const restaurantJsonLd = getRestaurantJsonLd();
+  const webSiteJsonLd = getWebSiteJsonLd();
 
   return (
     <html
@@ -106,7 +114,13 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(restaurantJsonLd).replace(/</g, "\\u003c"),
+            __html: jsonLdScript(restaurantJsonLd),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: jsonLdScript(webSiteJsonLd),
           }}
         />
         <Preloader />

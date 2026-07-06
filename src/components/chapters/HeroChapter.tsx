@@ -55,6 +55,7 @@ export function HeroChapter() {
         },
       });
 
+
       // Mouse-reactive parallax — each layer drifts by a different amount for
       // depth. Smooth via quickTo setters.
       const makeLayer = (selector: string, amount: number) => {
@@ -106,11 +107,17 @@ export function HeroChapter() {
           </p>
         </div>
 
-        {/* Oversized outlined poster headline (single colour) */}
-        <div className="pointer-events-none absolute inset-x-0 top-[18%] z-0 flex justify-center overflow-hidden px-2">
-          <h1 className="h-head h-text headline-outline whitespace-nowrap text-center font-display font-black leading-[0.8] text-[clamp(2.75rem,14vw,14rem)]">
+        {/* SEO heading + oversized poster headline */}
+        <h1 className="sr-only">
+          Teri Meri Biryani &amp; Restaurant — Indian Restaurant in Jeddah
+        </h1>
+        <div
+          className="pointer-events-none absolute inset-x-0 top-[14%] z-0 flex justify-center px-4 sm:top-[18%] sm:px-2"
+          aria-hidden
+        >
+          <p className="h-head h-text headline-outline max-w-full text-center font-display font-black leading-[0.88] text-[clamp(2.15rem,11vw,14rem)] sm:leading-[0.8] sm:whitespace-nowrap sm:text-[clamp(2.75rem,14vw,14rem)]">
             THE&nbsp;BIRYANI
-          </h1>
+          </p>
         </div>
 
         {/* Floating biryani + playful decorations (flex-centred, no transform

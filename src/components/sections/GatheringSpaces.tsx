@@ -9,8 +9,8 @@ import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { cn } from "@/lib/utils";
 import {
-  bindGatheringVerticalParallax,
-} from "@/lib/gathering-parallax";
+  bindSectionGhostParallax,
+} from "@/lib/section-ghost-parallax";
 import {
   WHATSAPP_FAMILY_DINING_URL,
   WHATSAPP_PRIVATE_DINING_URL,
@@ -61,34 +61,35 @@ export function GatheringIntroPanel({
         panelTrackClass(horizontal),
         className
       )}
+      data-ghost-trigger
     >
       <div
         className="gathering-texture pointer-events-none absolute inset-0 z-[1]"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute -left-16 top-[10%] h-[30rem] w-[30rem] rounded-full bg-green/28 blur-[110px] gathering-parallax-glow gathering-glow-pulse gathering-parallax-rise"
+        className="pointer-events-none absolute -left-16 top-[10%] h-[30rem] w-[30rem] rounded-full bg-green/28 blur-[110px] gathering-glow-pulse"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute -right-12 bottom-[6%] h-[28rem] w-[28rem] rounded-full bg-forest/35 blur-[120px] gathering-parallax-glow gathering-glow-pulse gathering-parallax-rise"
+        className="pointer-events-none absolute -right-12 bottom-[6%] h-[28rem] w-[28rem] rounded-full bg-forest/35 blur-[120px] gathering-glow-pulse"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold-soft/16 blur-[90px] gathering-parallax-glow gathering-glow-pulse gathering-parallax-rise"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold-soft/16 blur-[90px] gathering-glow-pulse"
         aria-hidden
       />
 
       <span
-        className="gathering-parallax-ghost pointer-events-none absolute -right-2 top-2 select-none font-display text-[38vw] leading-none text-cream/[0.07] md:text-[24vw]"
+        className="section-ghost pointer-events-none absolute -right-2 top-2 select-none font-display text-[38vw] leading-none text-cream/[0.07] will-change-transform md:text-[24vw]"
         aria-hidden
       >
         Gather
       </span>
 
-      <div className="gathering-intro-content gathering-parallax-rise container-tm relative z-10 text-center">
+      <div className="gathering-intro-content container-tm relative z-10 text-center">
         <p className="eyebrow text-gold-soft">Gather</p>
-        <h2 className="mx-auto mt-6 max-w-5xl text-[clamp(2.5rem,7vw,6.5rem)] leading-[0.92] text-cream drop-shadow-[0_8px_30px_rgba(38,27,22,0.35)]">
+        <h2 className="mx-auto mt-6 max-w-5xl px-3 text-[clamp(2.25rem,7vw,6.5rem)] leading-[0.92] text-cream drop-shadow-[0_8px_30px_rgba(38,27,22,0.35)] sm:mt-6 sm:px-0">
           {["Spaces", "for", "Every", "Gathering"].map((word) => (
             <span key={word} className="inline-block pr-[0.2em]">
               <span
@@ -141,6 +142,7 @@ function SpacePanel({
         isGreen && "gathering-row--green",
         isWarm && "gathering-row--warm"
       )}
+      data-ghost-trigger
     >
       <div className="gathering-texture pointer-events-none absolute inset-0 z-[1]" aria-hidden />
 
@@ -157,7 +159,7 @@ function SpacePanel({
             aria-hidden
           />
           <div
-            className="pointer-events-none absolute inset-y-0 left-0 w-[min(72%,42rem)] bg-[radial-gradient(ellipse_at_20%_50%,color-mix(in_srgb,var(--tm-green)_24%,transparent)_0%,transparent_68%)] opacity-75 gathering-parallax-glow gathering-parallax-rise"
+            className="pointer-events-none absolute inset-y-0 left-0 w-[min(72%,42rem)] bg-[radial-gradient(ellipse_at_20%_50%,color-mix(in_srgb,var(--tm-green)_24%,transparent)_0%,transparent_68%)] opacity-75"
             aria-hidden
           />
         </>
@@ -165,12 +167,12 @@ function SpacePanel({
 
       {isGreen ? (
         <div
-          className="pointer-events-none absolute -right-20 top-1/4 h-64 w-64 rounded-full bg-gold-soft/20 blur-[90px] gathering-parallax-glow gathering-parallax-rise"
+          className="pointer-events-none absolute -right-20 top-1/4 h-64 w-64 rounded-full bg-gold-soft/20 blur-[90px]"
           aria-hidden
         />
       ) : isWarm ? (
         <div
-          className="pointer-events-none absolute -right-12 top-[8%] h-56 w-56 rounded-full bg-green/12 blur-[90px] gathering-parallax-glow gathering-parallax-rise"
+          className="pointer-events-none absolute -right-12 top-[8%] h-56 w-56 rounded-full bg-green/12 blur-[90px]"
           aria-hidden
         />
       ) : null}
@@ -222,7 +224,7 @@ function SpacePanel({
             </span>
 
             <span
-              className="gathering-index pointer-events-none absolute -bottom-2 -right-1 z-0 font-display text-[clamp(5rem,16vw,11rem)] leading-none md:-bottom-4 md:right-2"
+              className="section-ghost gathering-index pointer-events-none absolute -bottom-2 -right-1 z-0 font-display text-[clamp(5rem,16vw,11rem)] leading-none will-change-transform md:-bottom-4 md:right-2"
               aria-hidden
             >
               {space.index}
@@ -232,7 +234,7 @@ function SpacePanel({
 
         <div
           className={cn(
-            "gathering-parallax-copy gathering-parallax-rise md:col-span-5",
+            "md:col-span-5",
             reversed ? "md:order-1 md:col-start-1" : "md:col-start-8"
           )}
         >
@@ -424,13 +426,13 @@ export function GatheringSpacesVertical() {
           scrollTrigger: { trigger: root.current, start: "top 72%" },
         });
       }
-      bindGatheringVerticalParallax(root.current);
+      bindSectionGhostParallax(root.current);
     },
     { scope: root }
   );
 
   return (
-    <section ref={root} id="gatherings" className="gatherings relative overflow-hidden bg-cream">
+    <section ref={root} id="gatherings" data-ghost-trigger className="gatherings relative overflow-hidden bg-cream">
       <GatheringIntroPanel className="min-h-0 w-full py-16 md:py-32" horizontal={false} />
       <SpacePanel space={SPACES[0]} priority horizontal={false} />
       <SpacePanel space={SPACES[1]} reversed priority horizontal={false} />

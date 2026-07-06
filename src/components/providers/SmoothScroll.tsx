@@ -6,6 +6,7 @@ import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { registerScroller, runHashScroll, scrollToTop } from "@/lib/scroll-nav";
 import { onAppReady, refreshScrollScene } from "@/lib/scroll-scene";
+import { bindSmoothNativeScroll } from "@/lib/smooth-native-scroll";
 import {
   HOME_HERO_HASH,
   LENIS_SCROLL_DURATION,
@@ -15,7 +16,7 @@ import {
 
 /**
  * Buttery smooth scrolling (Lenis) driven by GSAP's ticker and kept in
- * lockstep with ScrollTrigger. Respects prefers-reduced-motion.
+ * lockstep with ScrollTrigger.
  */
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -35,7 +36,6 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       easing: lenisEasing,
       wheelMultiplier: coarse ? 1 : 0.82,
       smoothWheel: true,
-      // syncTouch breaks taps on links/buttons — keep native touch scroll.
       syncTouch: false,
       touchMultiplier: 1.15,
       infinite: false,
@@ -78,11 +78,14 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     requestAnimationFrame(() => ScrollTrigger.refresh());
     onAppReady(refreshScrollScene);
 
+    const unbindNative = bindSmoothNativeScroll(lenis);
+
     const raf = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
     return () => {
+      unbindNative();
       gsap.ticker.remove(raf);
       ScrollTrigger.removeEventListener("refresh", onRefresh);
       registerScroller(null);

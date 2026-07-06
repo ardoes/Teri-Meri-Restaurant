@@ -8,7 +8,6 @@ const WORDS = [
   "Buttery",
   "Melt-in-your-mouth indulgent",
   "Smoky",
-  "Crispy",
 ];
 
 function MarqueeStrip({

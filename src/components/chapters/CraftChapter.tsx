@@ -4,7 +4,6 @@ import { useRef } from "react";
 import Image from "next/image";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { bindSectionScrollEffects } from "@/lib/section-drift";
-import { VERTICAL_SCRUB } from "@/lib/scroll-constants";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { cn } from "@/lib/utils";
@@ -42,12 +41,12 @@ export function CraftChapter({
 
   useGSAP(
     () => {
-      if (disableScrollEffects) return;
-
       const reduced = window.matchMedia(
         "(prefers-reduced-motion: reduce)"
       ).matches;
       if (reduced) return;
+
+      if (disableScrollEffects) return;
 
       gsap.from(".c-word", {
         yPercent: 120,
@@ -86,17 +85,6 @@ export function CraftChapter({
         ease: "power3.out",
         stagger: 0.14,
         scrollTrigger: { trigger: root.current, start: "top 55%" },
-      });
-
-      gsap.to(".c-media-inner", {
-        yPercent: -8,
-        ease: "none",
-        scrollTrigger: {
-          trigger: root.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: VERTICAL_SCRUB,
-        },
       });
 
       bindSectionScrollEffects(root.current, { skipHeading: true });

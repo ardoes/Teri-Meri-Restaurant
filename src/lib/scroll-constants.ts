@@ -11,16 +11,39 @@ export const LENIS_LERP_TOUCH = 0.1;
 export const LENIS_SCROLL_DURATION = 1.4;
 
 /**
- * ScrollTrigger scrub for pinned horizontal scenes — low values keep the track
- * locked to scroll position when the user stops (no long catch-up snap).
+ * ScrollTrigger scrub for pinned horizontal scenes — true = 1:1 with scroll
+ * (no catch-up lag that causes blanket layers to bounce on scrollbar input).
  */
-export const HORIZONTAL_SCRUB = 0.85;
+export const HORIZONTAL_SCRUB = true;
 
-/** Slightly tighter on touch so momentum does not overshoot panels */
-export const HORIZONTAL_SCRUB_TOUCH = 0.65;
+/** Slightly softer on touch */
+export const HORIZONTAL_SCRUB_TOUCH = 0.85;
 
 /** Default scrub for vertical parallax / drift tied to Lenis */
 export const VERTICAL_SCRUB = 1.15;
+
+/**
+ * Smooth GSAP scrub lag synced with Lenis — higher = slower, floatier catch-up.
+ * Used for footer reveals and pinned blanket scenes.
+ */
+export const LENIS_SCRUB = 1.4;
+
+/** Linear motion while scrubbing — pairs with LENIS_SCRUB for buttery scroll */
+export const BLANKET_RISE_EASE = "none";
+
+/** Scroll distance (× viewport height) for each blanket rise — higher = slower */
+export const CHEF_BLANKET_RISE_VH = 1.55;
+export const GATHER_BLANKET_RISE_VH = 1.9;
+
+/** Footer clip reveal — scroll distance before animation completes */
+export const FOOTER_REVEAL_VH = 0.82;
+
+export function getLenisScrub() {
+  if (typeof window === "undefined") return LENIS_SCRUB;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return 0.5;
+  if (window.matchMedia("(pointer: coarse)").matches) return 1.1;
+  return LENIS_SCRUB;
+}
 
 /** Lenis-style ease-out expo — shared by programmatic scrolls */
 export function lenisEasing(t: number) {

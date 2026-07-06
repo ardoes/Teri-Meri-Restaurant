@@ -12,11 +12,15 @@ import {
 } from "@/components/sections/SignatureChapters";
 import {
   HEADER_OFFSET,
-  getHorizontalScrub,
+  BLANKET_RISE_EASE,
+  CHEF_BLANKET_RISE_VH,
+  GATHER_BLANKET_RISE_VH,
+  getLenisScrub,
   GATHERING_SCROLL_STRETCH,
 } from "@/lib/scroll-constants";
 import { shouldStackDishesVertically } from "@/lib/motion-prefs";
 import { onAppReady, refreshScrollScene } from "@/lib/scroll-scene";
+import { bindSectionGhostParallax } from "@/lib/section-ghost-parallax";
 import { cn } from "@/lib/utils";
 
 const GATHERING_IMAGES = [
@@ -90,6 +94,8 @@ export function ChefSpecialsScene() {
       )
         return;
 
+      bindSectionGhostParallax(section);
+
       const chefPanels = 1 + DISHES.length;
       const gatherPanels = gatheringEl.children.length || 3;
 
@@ -123,14 +129,14 @@ export function ChefSpecialsScene() {
 
         applyInitialState();
 
-        const craftHold = window.innerHeight * 0.12;
-        const chefBlanketRise = window.innerHeight * 0.55;
-        const chefIntroHold = window.innerHeight * 0.03;
-        const kebabHold = window.innerHeight * 0.1;
-        const gatherBlanketRise = window.innerHeight * 0.72;
-        const gatherIntroHold = window.innerHeight * 0.16;
-        const familyHold = window.innerHeight * 0.1;
-        const privateHold = window.innerHeight * 0.14;
+        const craftHold = window.innerHeight * 0.18;
+        const chefBlanketRise = window.innerHeight * CHEF_BLANKET_RISE_VH;
+        const chefIntroHold = window.innerHeight * 0.06;
+        const kebabHold = window.innerHeight * 0.12;
+        const gatherBlanketRise = window.innerHeight * GATHER_BLANKET_RISE_VH;
+        const gatherIntroHold = window.innerHeight * 0.2;
+        const familyHold = window.innerHeight * 0.12;
+        const privateHold = window.innerHeight * 0.16;
 
         const getFirstGatherX = () => {
           const distance = getGatheringDistance();
@@ -164,7 +170,7 @@ export function ChefSpecialsScene() {
             end: () => `+=${scrollTotal}`,
             pin: true,
             pinType: "transform",
-            scrub: getHorizontalScrub(),
+            scrub: getLenisScrub(),
             invalidateOnRefresh: true,
             anticipatePin: 0,
           },
@@ -179,7 +185,7 @@ export function ChefSpecialsScene() {
             {
               yPercent: 0,
               duration: w(scrollBudget.chefBlanketRise),
-              ease: "power3.inOut",
+              ease: BLANKET_RISE_EASE,
               force3D: true,
             },
             ">"
@@ -203,7 +209,7 @@ export function ChefSpecialsScene() {
             {
               yPercent: 0,
               duration: w(scrollBudget.gatherBlanketRise),
-              ease: "power3.inOut",
+              ease: BLANKET_RISE_EASE,
               force3D: true,
             },
             ">"

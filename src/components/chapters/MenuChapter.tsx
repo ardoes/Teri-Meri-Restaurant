@@ -19,14 +19,14 @@ export function MenuIntroPanel({
     <article
       id="menu"
       className={cn(
-        "relative flex min-h-[calc(100svh-5rem)] items-center justify-center bg-cream px-4 py-12 text-center sm:px-6",
+        "relative flex min-h-[calc(100svh-5rem)] items-center justify-center overflow-hidden bg-cream px-4 pb-12 pt-24 text-center sm:px-6 sm:pt-28 md:pt-32",
         panelTrackClass(horizontal),
         className
       )}
     >
-      <div className="container-tm relative mx-auto w-full px-6">
+      <div className="container-tm relative mx-auto w-full px-4 sm:px-6">
         <span className="eyebrow block text-green">The Menu</span>
-        <h2 className="mt-6 text-[clamp(3rem,9vw,9rem)] leading-[0.88]">
+        <h2 className="mt-8 text-[clamp(2.75rem,9vw,9rem)] leading-[0.88] sm:mt-10">
           <span className="block text-espresso">Chef&apos;s</span>
           <span className="block italic text-orange">Specials</span>
         </h2>
@@ -92,7 +92,7 @@ export function MenuChapter() {
         <span className="block overflow-hidden">
           <span className="m-reveal eyebrow block">The Menu</span>
         </span>
-        <h2 className="mt-6 text-[clamp(3rem,9vw,9rem)] leading-[0.88]">
+        <h2 className="mt-8 text-[clamp(2.75rem,9vw,9rem)] leading-[0.88] sm:mt-10">
           <span className="block overflow-hidden">
             <span className="m-reveal block text-espresso">Chef&apos;s</span>
           </span>

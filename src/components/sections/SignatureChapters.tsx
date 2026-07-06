@@ -6,6 +6,7 @@ import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { HEADER_OFFSET, getHorizontalScrub } from "@/lib/scroll-constants";
 import { panelTrackClass, shouldStackDishesVertically } from "@/lib/motion-prefs";
 import { cn } from "@/lib/utils";
+import { bindSectionGhostParallax } from "@/lib/section-ghost-parallax";
 
 type DishImage = {
   src: string;
@@ -173,6 +174,7 @@ export function DishPanel({
         "dish-panel group relative flex items-center justify-center overflow-hidden py-8 sm:py-10",
         panelTrackClass(horizontal)
       )}
+      data-ghost-trigger
     >
       <div
         className={cn(
@@ -181,17 +183,17 @@ export function DishPanel({
         )}
       />
 
-      <span className="pointer-events-none absolute -right-6 top-4 select-none font-display text-[38vw] leading-none text-cream/10 transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-2 md:text-[26vw]">
+      <span className="section-ghost pointer-events-none absolute -right-6 top-4 select-none font-display text-[38vw] leading-none text-cream/10 transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform group-hover:-translate-y-2 md:text-[26vw]">
         {dish.index}
       </span>
 
       <div className="container-tm relative z-10 grid w-full max-w-[100rem] grid-cols-1 items-center gap-8 px-4 sm:gap-10 sm:px-6 md:-translate-y-4 md:grid-cols-12 md:gap-10">
-        <div className={cn(hasVisual ? "md:col-span-6" : "md:col-span-7")}>
-          <p className="text-xs uppercase tracking-[0.28em] text-cream/80 sm:text-sm sm:tracking-[0.3em]">
+        <div className={cn(hasVisual ? "md:col-span-6" : "md:col-span-7", "min-w-0")}>
+          <p className="text-xs uppercase tracking-[0.22em] text-cream/80 sm:text-sm sm:tracking-[0.3em]">
             Chef&apos;s Specials · {dish.index}
           </p>
-          <div className="relative mt-4 w-fit max-w-full">
-            <h3 className="relative z-0 font-display text-[clamp(2.75rem,10vw,10rem)] leading-[0.88] text-cream drop-shadow-[0_8px_30px_rgba(38,27,22,0.35)]">
+          <div className="relative mt-5 w-full max-w-full sm:mt-4">
+            <h3 className="relative z-0 break-words font-display text-[clamp(2.25rem,9vw,10rem)] leading-[0.9] text-cream drop-shadow-[0_8px_30px_rgba(38,27,22,0.35)] sm:leading-[0.88]">
               {dish.name}
             </h3>
             {dish.badge ? (
@@ -271,7 +273,10 @@ export function SignatureChapters({ forceVertical = false }: { forceVertical?: b
 
   useGSAP(
     () => {
-      if (forceVertical || stackVertical || shouldStackDishesVertically()) return;
+      if (forceVertical || stackVertical || shouldStackDishesVertically()) {
+        if (root.current) bindSectionGhostParallax(root.current);
+        return;
+      }
 
       const section = root.current;
       const trackEl = track.current;

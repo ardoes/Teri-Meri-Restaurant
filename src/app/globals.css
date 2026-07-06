@@ -81,7 +81,17 @@
   html {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
+  }
+
+  html.tm-custom-cursor,
+  html.tm-custom-cursor * {
+    cursor: none !important;
+  }
+
+  html.tm-custom-cursor .tm-cursor,
+  html.tm-custom-cursor .tm-cursor * {
+    cursor: none !important;
   }
 
   body {
@@ -223,6 +233,26 @@
     max-width: 90rem;
   }
 
+  .site-footer {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .site-footer-pad {
+    width: 100%;
+    padding-inline: clamp(1.25rem, 4vw, 4.5rem);
+  }
+
+  .site-footer-pad--narrow {
+    padding-inline: clamp(1.25rem, 3vw, 2.5rem) clamp(1.25rem, 4vw, 4.5rem);
+  }
+
+  @media (min-width: 768px) {
+    .site-footer-pad--narrow {
+      padding-inline: clamp(1.5rem, 2.5vw, 2.75rem) clamp(1.5rem, 3.5vw, 3rem);
+    }
+  }
+
   /* Oversized outlined poster headline (fill + thick cream stroke) */
   .headline-outline {
     color: var(--tm-orange);
@@ -321,25 +351,74 @@
   left: 0;
   width: 34px;
   height: 34px;
-  margin: -17px 0 0 -17px;
-  border: 1px solid var(--tm-gold);
-  border-radius: 9999px;
   pointer-events: none;
-  z-index: 90;
+  z-index: 99999;
   opacity: 0;
   will-change: transform;
-  transition: opacity 0.3s ease, width 0.35s var(--ease-out-expo),
-    height 0.35s var(--ease-out-expo), margin 0.35s var(--ease-out-expo),
+  transition: opacity 0.25s ease;
+}
+.tm-cursor--disabled {
+  display: none;
+}
+.tm-cursor__ring {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--tm-gold);
+  border-radius: 9999px;
+  box-shadow:
+    0 0 16px color-mix(in srgb, var(--tm-gold) 82%, transparent),
+    0 0 34px color-mix(in srgb, var(--tm-gold-soft) 68%, transparent),
+    0 0 56px color-mix(in srgb, var(--tm-gold) 38%, transparent),
+    0 0 78px color-mix(in srgb, var(--tm-gold) 18%, transparent);
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--tm-gold-soft) 72%, transparent))
+    drop-shadow(0 0 22px color-mix(in srgb, var(--tm-gold) 32%, transparent));
+  transition:
+    border-color 0.35s var(--ease-out-expo),
+    box-shadow 0.35s var(--ease-out-expo),
+    filter 0.35s var(--ease-out-expo),
+    transform 0.35s var(--ease-out-expo),
     background-color 0.35s var(--ease-out-expo);
+}
+.tm-cursor__dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 9999px;
+  background: var(--tm-gold);
+  box-shadow:
+    0 0 10px var(--tm-gold-soft),
+    0 0 22px color-mix(in srgb, var(--tm-gold) 78%, transparent),
+    0 0 40px color-mix(in srgb, var(--tm-gold) 48%, transparent),
+    0 0 58px color-mix(in srgb, var(--tm-gold) 24%, transparent);
+  transition:
+    transform 0.35s var(--ease-out-expo),
+    background-color 0.35s var(--ease-out-expo),
+    box-shadow 0.35s var(--ease-out-expo);
 }
 .tm-cursor--active {
   opacity: 1;
 }
-.tm-cursor--hover {
-  width: 58px;
-  height: 58px;
-  margin: -29px 0 0 -29px;
-  background-color: color-mix(in srgb, var(--tm-gold) 16%, transparent);
+.tm-cursor--hover .tm-cursor__ring {
+  transform: scale(1.55);
+  background-color: color-mix(in srgb, var(--tm-gold) 14%, transparent);
+  box-shadow:
+    0 0 22px color-mix(in srgb, var(--tm-gold) 88%, transparent),
+    0 0 44px color-mix(in srgb, var(--tm-gold-soft) 68%, transparent),
+    0 0 64px color-mix(in srgb, var(--tm-gold) 42%, transparent),
+    0 0 88px color-mix(in srgb, var(--tm-gold) 22%, transparent);
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--tm-gold-soft) 78%, transparent))
+    drop-shadow(0 0 30px color-mix(in srgb, var(--tm-gold) 38%, transparent));
+}
+.tm-cursor--hover .tm-cursor__dot {
+  transform: scale(1.1);
+  box-shadow:
+    0 0 12px var(--tm-gold-soft),
+    0 0 28px color-mix(in srgb, var(--tm-gold) 82%, transparent),
+    0 0 48px color-mix(in srgb, var(--tm-gold) 52%, transparent),
+    0 0 68px color-mix(in srgb, var(--tm-gold) 28%, transparent);
 }
 
 .tm-cursor__label {
@@ -361,12 +440,17 @@
 }
 
 /* Over full-bleed food imagery — becomes a solid orange "View" puck */
-.tm-cursor--view {
-  width: 92px;
-  height: 92px;
-  margin: -46px 0 0 -46px;
+.tm-cursor--view .tm-cursor__ring {
+  transform: scale(2.35);
   border-color: transparent;
   background-color: var(--tm-orange);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--tm-orange) 55%, transparent);
+}
+.tm-cursor--view .tm-cursor__dot {
+  opacity: 0;
+  transform: scale(0);
+}
+.tm-cursor--view {
   mix-blend-mode: normal;
 }
 .tm-cursor--view .tm-cursor__label {
@@ -1169,6 +1253,7 @@ html.lenis body {
 .go-top-slice--pulse .slice-btn__layer--orange {
   transform: translateY(0);
   transition-delay: 0s;
+  opacity: 1;
 }
 
 .slice-btn:hover .slice-btn__layer--green,
@@ -1208,9 +1293,15 @@ html.lenis body {
 
 .slice-btn:not(:hover):not(.slice-btn--pulse) .slice-btn__layer--orange,
 .menu-search-send:not(:hover):not(.menu-search-send--pulse)
-  .slice-btn__layer--orange,
+  .slice-btn__layer--orange {
+  transition-delay: 0.24s;
+}
+
+/* Idle orange peek — go-to-top only */
 .go-top-slice:not(:hover):not(.go-top-slice--pulse) .slice-btn__layer--orange {
   transition-delay: 0.24s;
+  transform: translateY(72%);
+  opacity: 0.42;
 }
 
 .slice-btn:hover .slice-btn__content,
@@ -1248,15 +1339,26 @@ html.lenis body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  width: 3.15rem;
+  height: 3.15rem;
+  border: 1.5px solid color-mix(in srgb, var(--tm-gold) 58%, rgba(255, 255, 255, 0.55));
   border-radius: 9999px;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(22px) saturate(155%);
-  -webkit-backdrop-filter: blur(22px) saturate(155%);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.42) inset;
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--tm-cream) 22%, transparent),
+      color-mix(in srgb, var(--tm-gold) 14%, transparent)
+    ),
+    rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(22px) saturate(165%);
+  -webkit-backdrop-filter: blur(22px) saturate(165%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 0 0 1px color-mix(in srgb, var(--tm-gold) 18%, transparent),
+    0 8px 26px color-mix(in srgb, var(--tm-espresso) 22%, transparent),
+    0 0 22px color-mix(in srgb, var(--tm-gold) 34%, transparent),
+    0 0 38px color-mix(in srgb, var(--tm-orange) 18%, transparent);
   transition:
     transform 0.45s var(--ease-out-expo),
     box-shadow 0.45s var(--ease-out-expo),
@@ -1266,7 +1368,8 @@ html.lenis body {
 .go-top-slice__icon {
   position: relative;
   z-index: 3;
-  color: color-mix(in srgb, var(--tm-espresso) 78%, transparent);
+  color: color-mix(in srgb, var(--tm-espresso) 92%, var(--tm-gold));
+  filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.45));
   transition:
     color 0.35s var(--ease-out-expo),
     transform 0.45s var(--ease-out-expo);
@@ -1731,6 +1834,25 @@ html.lenis body {
 
 /* —— Responsive: phone, tablet, large displays —— */
 @media (max-width: 767px) {
+  .headline-outline {
+    overflow-wrap: anywhere;
+    word-break: normal;
+    hyphens: auto;
+  }
+
+  .chapter-heading-exit,
+  .menu-chapter-title,
+  .menu-find-dish-title {
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  .dish-panel h3,
+  .gathering-panel h3 {
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
   .dish-panel,
   .gathering-panel {
     min-height: auto;
@@ -1741,6 +1863,29 @@ html.lenis body {
   .dish-panel .dish-image-card,
   .gathering-media__frame {
     min-height: 14rem;
+  }
+
+  .menu-page-hero .menu-hero-word {
+    font-size: clamp(3.25rem, 18vw, 13.5rem);
+  }
+
+  .menu-hero-ghost {
+    font-size: clamp(4rem, 20vw, 16rem) !important;
+  }
+
+  #reserve h2,
+  .gathering-panel--intro h2 {
+    font-size: clamp(2.35rem, 8.5vw, 9rem);
+    padding-inline: 0.5rem;
+  }
+
+  .site-footer .f-mark .font-display {
+    font-size: clamp(2.75rem, 10vw, 11rem) !important;
+  }
+
+  .eyebrow {
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
   }
 }
 

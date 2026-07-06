@@ -9,8 +9,8 @@ import { SliceButtonLayers } from "@/components/ui/SliceButtonLayers";
 function ChevronUpIcon({ className }: { className?: string }) {
   return (
     <svg
-      width="15"
-      height="15"
+      width="17"
+      height="17"
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden

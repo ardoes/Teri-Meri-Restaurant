@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { bindSectionScrollEffects } from "@/lib/section-drift";
+import { bindSectionGhostParallax } from "@/lib/section-ghost-parallax";
 import { MENU_SEARCH_PATH } from "@/lib/scroll-constants";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Magnetic } from "@/components/ui/Magnetic";
@@ -59,28 +60,7 @@ export function StoryChapter() {
         scrollTrigger: { trigger: root.current, start: "top 55%" },
       });
 
-      gsap.to(".s-media-inner", {
-        yPercent: -8,
-        ease: "none",
-        scrollTrigger: {
-          trigger: root.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
-
-      gsap.to(".s-ghost", {
-        yPercent: -22,
-        ease: "none",
-        scrollTrigger: {
-          trigger: root.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
-
+      bindSectionGhostParallax(root.current);
       bindSectionScrollEffects(root.current);
     },
     { scope: root }
@@ -90,16 +70,20 @@ export function StoryChapter() {
     <section
       id="story"
       ref={root}
+      data-ghost-trigger
       className="relative flex min-h-screen items-center overflow-hidden py-20 sm:py-28 md:py-40"
     >
-      <span className="s-ghost pointer-events-none absolute -left-4 top-6 select-none font-display text-[24vw] leading-none text-orange/[0.07] md:text-[14vw]">
+      <span
+        className="section-ghost pointer-events-none absolute -left-4 top-6 select-none font-display text-[24vw] leading-none text-orange/[0.07] will-change-transform md:text-[14vw]"
+        aria-hidden
+      >
         02
       </span>
 
       <div className="chapter-drift container-tm relative grid w-full grid-cols-1 items-center gap-10 sm:gap-12 md:grid-cols-12">
         <div className="md:col-span-6">
           <p className="s-fade eyebrow">Our Story</p>
-          <h2 className="chapter-heading-exit mt-7 text-[clamp(2.5rem,6vw,6rem)] leading-[0.98] text-espresso">
+          <h2 className="chapter-heading-exit mt-7 text-[clamp(2.25rem,6vw,6rem)] leading-[0.98] text-espresso sm:text-[clamp(2.5rem,6vw,6rem)]">
             {HEADLINE.map((w, i) => (
               <span key={i} className="inline-block overflow-hidden align-bottom">
                 <span className="s-word inline-block pr-[0.22em]">{w}</span>

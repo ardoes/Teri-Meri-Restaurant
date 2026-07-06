@@ -2,28 +2,9 @@
 
 import { useRef, useState } from "react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { preloadSiteAssets } from "@/lib/preload-assets";
 import { Wordmark } from "@/components/ui/Wordmark";
 import styles from "./preloader.module.css";
-
-const MIN_MS = 1500;
-const MAX_MS = 6000;
-
-/** Every image used across the homepage + menu — preloaded during the curtain. */
-const PRELOAD_IMAGES = [
-  "/images/logo.png",
-  "/images/biryani.png",
-  "/images/story-dining.png",
-  "/images/story-kitchen.jpg",
-  "/images/craft-biryani.jpg",
-  "/images/chef-special-biryani.jpg",
-  "/images/chef-special-butter-chicken.jpg",
-  "/images/chef-special-kebabs.jpg",
-  "/images/chef-special-kebab-malai.jpg",
-  "/images/chef-special-kebab-red.jpg",
-  "/images/chef-special-kebab-tandoori.jpg",
-  "/images/gathering-family-dining.png",
-  "/images/gathering-private-dining.png",
-];
 
 function signalReady() {
   (window as unknown as { __tmReady?: boolean }).__tmReady = true;
@@ -31,54 +12,20 @@ function signalReady() {
   ScrollTrigger.refresh();
 }
 
-/** Preload a fixed manifest of images; resolves once all have settled. */
-function preloadImages() {
-  return Promise.all(
-    PRELOAD_IMAGES.map(
-      (src) =>
-        new Promise<void>((resolve) => {
-          const img = new Image();
-          img.onload = () => resolve();
-          img.onerror = () => resolve();
-          img.src = src;
-        })
-    )
-  ).then(() => undefined);
-}
+function applyLoadProgress(
+  root: HTMLDivElement | null,
+  percent: number
+) {
+  const countEl = root?.querySelector<HTMLElement>(".pl-count");
+  const lineFill = root?.querySelector<HTMLElement>(".pl-line-fill");
+  const clamped = Math.max(0, Math.min(100, Math.round(percent)));
 
-/**
- * Resolve once the page is truly ready to reveal:
- * fonts + document load + all manifest images decoded — but never past MAX_MS.
- */
-function waitForReady() {
-  return new Promise<void>((resolve) => {
-    let settled = false;
-    const started = performance.now();
-
-    let assetsReady = false;
-    const fontsReady = document.fonts?.ready ?? Promise.resolve();
-    Promise.all([fontsReady, preloadImages()]).then(() => {
-      assetsReady = true;
-    });
-
-    const tryResolve = () => {
-      if (settled) return;
-      const elapsed = performance.now() - started;
-      const loaded = document.readyState === "complete";
-      if ((elapsed >= MIN_MS && loaded && assetsReady) || elapsed >= MAX_MS) {
-        settled = true;
-        resolve();
-      }
-    };
-
-    const tick = () => {
-      tryResolve();
-      if (!settled) requestAnimationFrame(tick);
-    };
-
-    tick();
-    window.addEventListener("load", tryResolve, { once: true });
-  });
+  if (countEl) {
+    countEl.textContent = String(clamped).padStart(2, "0");
+  }
+  if (lineFill) {
+    lineFill.style.width = `${clamped}%`;
+  }
 }
 
 function splitOffset() {
@@ -86,8 +33,8 @@ function splitOffset() {
 }
 
 /**
- * Premium gold preloader — split headline, centered wordmark reveal,
- * progress line, then curtain lift into the hero (~1.5–2.5s).
+ * Premium gold preloader — real asset loading (fonts + every image decoded)
+ * drives the progress bar; curtain lifts only when loading is truly done.
  */
 export function Preloader() {
   const root = useRef<HTMLDivElement>(null);
@@ -100,6 +47,7 @@ export function Preloader() {
       ).matches;
 
       document.body.style.overflow = "hidden";
+      applyLoadProgress(root.current, 0);
 
       const finish = () => {
         document.body.style.overflow = "";
@@ -107,19 +55,61 @@ export function Preloader() {
         setDone(true);
       };
 
-      if (prefersReduced) {
-        finish();
-        return;
-      }
+      let introDone = false;
+      let assetsDone = false;
 
-      const countEl = root.current?.querySelector<HTMLElement>(".pl-count");
-      const counter = { v: 0 };
+      const runExit = () => {
+        applyLoadProgress(root.current, 100);
+
+        if (prefersReduced) {
+          finish();
+          return;
+        }
+
+        gsap
+          .timeline({ defaults: { ease: "expo.inOut" } })
+          .to(".pl-content", { opacity: 0, duration: 0.28, ease: "power2.in" })
+          .to(
+            ".pl-panel",
+            {
+              yPercent: -100,
+              duration: 0.82,
+              stagger: 0.07,
+              onComplete: finish,
+            },
+            "<0.08"
+          );
+      };
+
+      const tryExit = () => {
+        if (introDone && assetsDone) runExit();
+      };
+
+      preloadSiteAssets((progress) => {
+        applyLoadProgress(root.current, progress.percent);
+      }).then(() => {
+        assetsDone = true;
+        tryExit();
+      });
+
+      if (prefersReduced) {
+        introDone = true;
+        return () => {
+          document.body.style.overflow = "";
+        };
+      }
 
       gsap.set(".pl-mark", { opacity: 0, scale: 0.9, y: 12, filter: "blur(8px)" });
       gsap.set(".pl-mark-inner", { clipPath: "inset(100% 0 0 0)" });
       gsap.set(".pl-line-fill", { width: "0%" });
 
-      const intro = gsap.timeline({ defaults: { ease: "expo.out" } });
+      const intro = gsap.timeline({
+        defaults: { ease: "expo.out" },
+        onComplete: () => {
+          introDone = true;
+          tryExit();
+        },
+      });
 
       intro
         .from(".pl-left, .pl-right", {
@@ -167,64 +157,11 @@ export function Preloader() {
             ease: "expo.out",
           },
           "split+=0.18"
-        )
-        .to(
-          counter,
-          {
-            v: 100,
-            duration: 1.05,
-            ease: "power2.inOut",
-            onUpdate: () => {
-              if (countEl)
-                countEl.textContent = String(Math.round(counter.v)).padStart(
-                  2,
-                  "0"
-                );
-            },
-          },
-          "split"
-        )
-        .to(
-          ".pl-line-fill",
-          { width: "100%", duration: 1.05, ease: "power2.inOut" },
-          "split"
         );
-
-      let introDone = false;
-      let readyDone = false;
-
-      const runExit = () => {
-        gsap
-          .timeline({ defaults: { ease: "expo.inOut" } })
-          .to(".pl-content", { opacity: 0, duration: 0.28, ease: "power2.in" })
-          .to(
-            ".pl-panel",
-            {
-              yPercent: -100,
-              duration: 0.82,
-              stagger: 0.07,
-              onComplete: finish,
-            },
-            "<0.08"
-          );
-      };
-
-      const tryExit = () => {
-        if (introDone && readyDone) runExit();
-      };
-
-      intro.eventCallback("onComplete", () => {
-        introDone = true;
-        tryExit();
-      });
-
-      waitForReady().then(() => {
-        readyDone = true;
-        tryExit();
-      });
 
       return () => {
         document.body.style.overflow = "";
+        intro.kill();
       };
     },
     { scope: root }
@@ -243,7 +180,7 @@ export function Preloader() {
       <div className={`pl-panel ${styles.panelGold} absolute inset-0`}>
         <div className="pl-content relative flex h-full flex-col items-center justify-center px-6">
           <div className="relative flex w-full max-w-5xl items-center justify-center">
-            <p className="flex items-baseline whitespace-nowrap font-display text-[clamp(1.35rem,4.2vw,3.25rem)] font-medium uppercase leading-none tracking-[0.14em] text-espresso md:tracking-[0.18em]">
+            <p className="flex flex-wrap items-baseline justify-center gap-x-[0.32em] text-center font-display text-[clamp(1.15rem,4.2vw,3.25rem)] font-medium uppercase leading-none tracking-[0.12em] text-espresso sm:flex-nowrap sm:tracking-[0.14em] md:tracking-[0.18em]">
               <span className="pl-left inline-block will-change-transform">
                 Two Cities,
               </span>
@@ -264,6 +201,7 @@ export function Preloader() {
               <div className="relative h-0.5 flex-1 overflow-hidden rounded-full bg-espresso/25">
                 <div
                   className={`pl-line-fill absolute inset-y-0 left-0 rounded-full ${styles.lineFill}`}
+                  style={{ width: "0%" }}
                 />
               </div>
               <span className="pl-count min-w-[2.5ch] font-sans text-sm font-semibold tabular-nums tracking-[0.2em] text-orange">
