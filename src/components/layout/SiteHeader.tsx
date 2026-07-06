@@ -10,6 +10,7 @@ import {
   HOME_HERO_PATH,
   MENU_SEARCH_HASH,
   MENU_SEARCH_PATH,
+  scrollToHash,
   scrollToMenuSearch,
   scrollToTop,
 } from "@/lib/scroll-nav";
@@ -54,6 +55,30 @@ export function SiteHeader() {
       scrollToMenuSearch({ duration: 1.05 });
     },
     [pathname]
+  );
+
+  const handleNavClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      if (href.startsWith("/#")) {
+        e.preventDefault();
+        const hash = href.slice(1);
+
+        if (pathname !== "/") {
+          navigate(`/${hash}`, { scroll: false });
+          return;
+        }
+
+        window.history.pushState(null, "", hash);
+        scrollToHash(hash, { duration: 1.1 });
+        return;
+      }
+
+      if (href === "/menu") {
+        e.preventDefault();
+        navigate("/menu");
+      }
+    },
+    [pathname, navigate]
   );
 
   useEffect(() => {
@@ -105,6 +130,7 @@ export function SiteHeader() {
               href={item.href}
               className="nav-link"
               scroll={false}
+              onClick={(e) => handleNavClick(e, item.href)}
             >
               {item.label}
             </Link>
@@ -128,6 +154,7 @@ export function SiteHeader() {
             className="nav-link"
             scroll={false}
             data-cursor="hover"
+            onClick={(e) => handleNavClick(e, "/menu")}
           >
             Menu
           </Link>

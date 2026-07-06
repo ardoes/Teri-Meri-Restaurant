@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Magnetic } from "@/components/ui/Magnetic";
-import { MENU_SEARCH_PATH } from "@/lib/scroll-constants";
+import { MENU_SEARCH_PATH, VERTICAL_SCRUB } from "@/lib/scroll-constants";
 
 export function ReservationScene() {
   const root = useRef<HTMLElement>(null);
@@ -16,51 +16,55 @@ export function ReservationScene() {
       ).matches;
       if (reduced) return;
 
-      gsap.from(".r-line", {
-        yPercent: 110,
-        opacity: 0,
-        duration: 1.15,
-        ease: "expo.out",
-        stagger: 0.1,
-        scrollTrigger: { trigger: root.current, start: "top 68%" },
-      });
-      gsap.from(".r-fade", {
-        y: 22,
-        opacity: 0,
-        duration: 0.95,
-        ease: "expo.out",
-        stagger: 0.09,
-        scrollTrigger: { trigger: root.current, start: "top 56%" },
-      });
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top bottom",
+            end: "top 45%",
+            scrub: VERTICAL_SCRUB,
+          },
+        })
+        .fromTo(
+          ".r-line",
+          { yPercent: 110, opacity: 0 },
+          { yPercent: 0, opacity: 1, duration: 0.4, stagger: 0.06, ease: "none" },
+          0
+        )
+        .fromTo(
+          ".r-fade",
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.32, stagger: 0.05, ease: "none" },
+          0.08
+        );
 
-      // Background parallax — moves slower than foreground content
       gsap.fromTo(
         ".r-bg-wash",
         { yPercent: 8 },
         {
-          yPercent: -18,
+          yPercent: -12,
           ease: "none",
           scrollTrigger: {
             trigger: root.current,
             start: "top bottom",
             end: "bottom top",
-            scrub: 2,
+            scrub: VERTICAL_SCRUB,
           },
         }
       );
 
       gsap.fromTo(
         ".r-bg-glow",
-        { yPercent: 14, scale: 1.08 },
+        { yPercent: 10, scale: 1.04 },
         {
-          yPercent: -10,
-          scale: 1.14,
+          yPercent: -8,
+          scale: 1.08,
           ease: "none",
           scrollTrigger: {
             trigger: root.current,
             start: "top bottom",
             end: "bottom top",
-            scrub: 2.6,
+            scrub: VERTICAL_SCRUB,
           },
         }
       );
@@ -69,13 +73,13 @@ export function ReservationScene() {
         ".r-ghost",
         { yPercent: 6 },
         {
-          yPercent: -22,
+          yPercent: -14,
           ease: "none",
           scrollTrigger: {
             trigger: root.current,
             start: "top bottom",
             end: "bottom top",
-            scrub: 1.6,
+            scrub: VERTICAL_SCRUB,
           },
         }
       );

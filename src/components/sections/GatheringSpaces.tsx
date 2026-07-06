@@ -67,15 +67,15 @@ export function GatheringIntroPanel({
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute -left-20 top-[6%] h-[32rem] w-[32rem] rounded-full bg-marigold/45 blur-[110px] gathering-parallax-glow gathering-glow-pulse gathering-parallax-rise"
+        className="pointer-events-none absolute -left-16 top-[10%] h-[30rem] w-[30rem] rounded-full bg-green/28 blur-[110px] gathering-parallax-glow gathering-glow-pulse gathering-parallax-rise"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute -right-16 bottom-[4%] h-[36rem] w-[36rem] rounded-full bg-orange/50 blur-[120px] gathering-parallax-glow gathering-glow-pulse gathering-parallax-rise"
+        className="pointer-events-none absolute -right-12 bottom-[6%] h-[28rem] w-[28rem] rounded-full bg-forest/35 blur-[120px] gathering-parallax-glow gathering-glow-pulse gathering-parallax-rise"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold-soft/28 blur-[90px] gathering-parallax-glow gathering-glow-pulse gathering-parallax-rise"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold-soft/16 blur-[90px] gathering-parallax-glow gathering-glow-pulse gathering-parallax-rise"
         aria-hidden
       />
 
@@ -93,8 +93,8 @@ export function GatheringIntroPanel({
             <span key={word} className="inline-block pr-[0.2em]">
               <span
                 className={cn(
-                  word === "Every" && "italic text-marigold",
-                  word === "Gathering" && "text-gold-soft"
+                  word === "Every" && "italic text-gold-soft",
+                  word === "Gathering" && "text-cream"
                 )}
               >
                 {word}
@@ -107,8 +107,8 @@ export function GatheringIntroPanel({
           to linger.
         </p>
         <div className="mx-auto mt-12 flex h-[3px] w-40 overflow-hidden rounded-full md:mt-14">
-          <span className="h-full flex-[2] bg-marigold" />
-          <span className="h-full flex-1 bg-cream" />
+          <span className="h-full flex-[2] bg-green" />
+          <span className="h-full flex-1 bg-gold-soft" />
         </div>
         <p className="gathering-scroll-hint mx-auto mt-8 text-[0.65rem] uppercase tracking-[0.38em] text-cream/70 md:mt-10">
           Scroll to explore
@@ -157,7 +157,7 @@ function SpacePanel({
             aria-hidden
           />
           <div
-            className="pointer-events-none absolute inset-y-0 left-0 w-[min(72%,42rem)] bg-[radial-gradient(ellipse_at_20%_50%,color-mix(in_srgb,var(--tm-gold-soft)_40%,transparent)_0%,transparent_68%)] opacity-80 gathering-parallax-glow gathering-parallax-rise"
+            className="pointer-events-none absolute inset-y-0 left-0 w-[min(72%,42rem)] bg-[radial-gradient(ellipse_at_20%_50%,color-mix(in_srgb,var(--tm-green)_24%,transparent)_0%,transparent_68%)] opacity-75 gathering-parallax-glow gathering-parallax-rise"
             aria-hidden
           />
         </>
@@ -170,7 +170,7 @@ function SpacePanel({
         />
       ) : isWarm ? (
         <div
-          className="pointer-events-none absolute -right-12 top-[8%] h-56 w-56 rounded-full bg-orange/15 blur-[90px] gathering-parallax-glow gathering-parallax-rise"
+          className="pointer-events-none absolute -right-12 top-[8%] h-56 w-56 rounded-full bg-green/12 blur-[90px] gathering-parallax-glow gathering-parallax-rise"
           aria-hidden
         />
       ) : null}
@@ -203,8 +203,8 @@ function SpacePanel({
                 isGreen
                   ? "bg-[linear-gradient(145deg,var(--tm-green)_0%,transparent_55%)] opacity-25"
                   : isWarm
-                    ? "bg-[linear-gradient(145deg,var(--tm-orange)_0%,transparent_48%)] opacity-15"
-                    : "bg-[linear-gradient(145deg,var(--tm-orange)_0%,transparent_50%)] opacity-30"
+                    ? "bg-[linear-gradient(145deg,var(--tm-green)_0%,transparent_55%)] opacity-12"
+                    : "bg-[linear-gradient(145deg,var(--tm-green)_0%,transparent_50%)] opacity-20"
               )}
               aria-hidden
             />
@@ -253,8 +253,8 @@ function SpacePanel({
             {space.title}
           </h3>
           <div className="mt-7 flex h-[3px] w-28 overflow-hidden rounded-full">
-            <span className="h-full flex-[2] bg-orange" />
-            <span className="h-full flex-1 bg-green" />
+            <span className="h-full flex-[2] bg-green" />
+            <span className="h-full flex-1 bg-gold-soft" />
           </div>
           <p
             className={cn(

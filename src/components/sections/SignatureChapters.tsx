@@ -69,10 +69,14 @@ export const DISHES: Dish[] = [
 function DishImageFrame({
   dish,
   className,
+  eager = false,
 }: {
   dish: Dish;
   className?: string;
+  eager?: boolean;
 }) {
+  const loadEager = eager || dish.index === "01";
+
   return (
     <div
       data-cursor="view"
@@ -92,7 +96,8 @@ function DishImageFrame({
           style={
             dish.imagePosition ? { objectPosition: dish.imagePosition } : undefined
           }
-          priority={dish.index === "01"}
+          priority={loadEager}
+          loading={loadEager ? "eager" : "lazy"}
         />
       </div>
       <div className="pointer-events-none absolute inset-0 z-[2] bg-espresso/10" />
@@ -211,7 +216,7 @@ export function DishPanel({
           </div>
         ) : dish.image ? (
           <div className="mx-auto w-full max-w-[18rem] self-center sm:max-w-sm md:col-span-5 md:col-start-8 md:max-w-[26rem] lg:max-w-[30rem]">
-            <DishImageFrame dish={dish} />
+            <DishImageFrame dish={dish} eager={horizontal} />
           </div>
         ) : (
           <div className="md:col-span-5 md:col-start-8">

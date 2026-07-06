@@ -11,12 +11,6 @@ import {
   SignatureChapters,
 } from "@/components/sections/SignatureChapters";
 import {
-  bindChefDishParallax,
-  bindGatheringBlanketParallax,
-  bindGatheringHorizontalParallax,
-  bindGatheringIntroSuspense,
-} from "@/lib/gathering-parallax";
-import {
   HEADER_OFFSET,
   getHorizontalScrub,
   GATHERING_SCROLL_STRETCH,
@@ -30,8 +24,12 @@ const GATHERING_IMAGES = [
   "/images/gathering-private-dining.png",
 ] as const;
 
-function preloadGatheringImages() {
-  GATHERING_IMAGES.forEach((src) => {
+const CHEF_SPECIAL_IMAGES = DISHES.map((dish) => dish.image).filter(
+  (src): src is string => Boolean(src)
+);
+
+function preloadImages(urls: readonly string[]) {
+  urls.forEach((src) => {
     const img = new window.Image();
     img.src = src;
   });
@@ -125,13 +123,23 @@ export function ChefSpecialsScene() {
 
         applyInitialState();
 
-        const craftHold = window.innerHeight * 0.22;
-        const chefBlanketRise = window.innerHeight * 0.38;
-        const chefIntroHold = window.innerHeight * 0.1;
-        const kebabHold = window.innerHeight * 0.08;
-        const gatherBlanketRise = window.innerHeight * 0.38;
-        const gatherIntroHold = window.innerHeight * 0.26;
-        const privateHold = window.innerHeight * 0.07;
+        const craftHold = window.innerHeight * 0.12;
+        const chefBlanketRise = window.innerHeight * 0.55;
+        const chefIntroHold = window.innerHeight * 0.03;
+        const kebabHold = window.innerHeight * 0.1;
+        const gatherBlanketRise = window.innerHeight * 0.72;
+        const gatherIntroHold = window.innerHeight * 0.16;
+        const familyHold = window.innerHeight * 0.1;
+        const privateHold = window.innerHeight * 0.14;
+
+        const getFirstGatherX = () => {
+          const distance = getGatheringDistance();
+          const panels = gatheringEl.children.length || gatherPanels;
+          const step = panels > 1 ? distance / (panels - 1) : 0;
+          return -distance + step;
+        };
+        const gatherMove = gatheringDistance * GATHERING_SCROLL_STRETCH;
+        const gatherHalfMove = gatherMove / 2;
 
         const scrollBudget = {
           craftHold,
@@ -141,7 +149,9 @@ export function ChefSpecialsScene() {
           kebabHold,
           gatherBlanketRise,
           gatherIntroHold,
-          gather: gatheringDistance * GATHERING_SCROLL_STRETCH,
+          gatherFirst: gatherHalfMove,
+          familyHold,
+          gatherSecond: gatherHalfMove,
           privateHold,
         };
         const scrollTotal = Object.values(scrollBudget).reduce((a, b) => a + b, 0);
@@ -169,7 +179,7 @@ export function ChefSpecialsScene() {
             {
               yPercent: 0,
               duration: w(scrollBudget.chefBlanketRise),
-              ease: "none",
+              ease: "power3.inOut",
               force3D: true,
             },
             ">"
@@ -193,7 +203,7 @@ export function ChefSpecialsScene() {
             {
               yPercent: 0,
               duration: w(scrollBudget.gatherBlanketRise),
-              ease: "none",
+              ease: "power3.inOut",
               force3D: true,
             },
             ">"
@@ -204,34 +214,25 @@ export function ChefSpecialsScene() {
           .to(
             gatheringEl,
             {
+              x: getFirstGatherX,
+              ease: "none",
+              force3D: true,
+              duration: w(scrollBudget.gatherFirst),
+            },
+            ">"
+          )
+          .to({}, { duration: w(scrollBudget.familyHold) })
+          .to(
+            gatheringEl,
+            {
               x: 0,
               ease: "none",
               force3D: true,
-              duration: w(scrollBudget.gather),
+              duration: w(scrollBudget.gatherSecond),
             },
             ">"
           )
           .to({}, { duration: w(scrollBudget.privateHold) });
-
-        bindGatheringIntroSuspense(
-          timeline,
-          gatheringEl,
-          "gatherIntroHold",
-          w(scrollBudget.gatherIntroHold)
-        );
-        bindChefDishParallax(timeline, trackEl, "chefScroll", w(scrollBudget.chef));
-        bindGatheringBlanketParallax(
-          timeline,
-          gatheringEl,
-          "gatherBlanket",
-          w(scrollBudget.gatherBlanketRise)
-        );
-        bindGatheringHorizontalParallax(
-          timeline,
-          gatheringEl,
-          "gatherScroll",
-          w(scrollBudget.gather)
-        );
 
         setupDone.current = true;
         refreshScrollScene();
@@ -239,7 +240,8 @@ export function ChefSpecialsScene() {
       };
 
       applyInitialState();
-      preloadGatheringImages();
+      preloadImages(GATHERING_IMAGES);
+      preloadImages(CHEF_SPECIAL_IMAGES);
 
       let attempts = 0;
       const tryBuild = () => {

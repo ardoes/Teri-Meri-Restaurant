@@ -1563,12 +1563,11 @@ html.lenis body {
 
 .gathering-panel--intro {
   background: linear-gradient(
-    145deg,
-    var(--tm-green-deep) 0%,
-    var(--tm-green) 22%,
-    var(--tm-marigold) 48%,
-    var(--tm-orange) 78%,
-    var(--tm-orange-deep) 100%
+    155deg,
+    var(--tm-forest) 0%,
+    var(--tm-green-deep) 28%,
+    var(--tm-green) 58%,
+    var(--tm-green-deep) 100%
   );
   color: var(--tm-cream);
 }
@@ -1581,9 +1580,9 @@ html.lenis body {
   pointer-events: none;
   background: linear-gradient(
     120deg,
-    transparent 5%,
-    color-mix(in srgb, var(--tm-orange) 28%, transparent) 50%,
-    color-mix(in srgb, var(--tm-marigold) 20%, transparent) 100%
+    transparent 8%,
+    color-mix(in srgb, var(--tm-gold-soft) 14%, transparent) 52%,
+    transparent 100%
   );
 }
 
@@ -1604,15 +1603,15 @@ html.lenis body {
   );
 }
 
-/* Subtle brand wash — light green + orange over cream canvas */
+/* Subtle brand wash — green over cream canvas */
 .gathering-row--warm .gathering-row__brand-wash {
   background: linear-gradient(
     128deg,
-    color-mix(in srgb, var(--tm-green) 16%, transparent) 0%,
-    transparent 44%,
-    color-mix(in srgb, var(--tm-orange) 14%, transparent) 100%
+    color-mix(in srgb, var(--tm-green) 20%, transparent) 0%,
+    transparent 50%,
+    color-mix(in srgb, var(--tm-green-deep) 10%, transparent) 100%
   );
-  opacity: 0.92;
+  opacity: 0.88;
 }
 
 .gathering-row--warm .gathering-media__frame {
@@ -1625,7 +1624,7 @@ html.lenis body {
   background: linear-gradient(
     225deg,
     var(--tm-gold-soft) 0%,
-    color-mix(in srgb, var(--tm-orange) 55%, var(--tm-gold-soft)) 100%
+    color-mix(in srgb, var(--tm-green) 45%, var(--tm-gold-soft)) 100%
   );
 }
 
@@ -1667,7 +1666,7 @@ html.lenis body {
   background: linear-gradient(
     225deg,
     var(--tm-gold-soft) 0%,
-    color-mix(in srgb, var(--tm-orange) 55%, var(--tm-gold-soft)) 100%
+    color-mix(in srgb, var(--tm-green) 55%, var(--tm-gold-soft)) 100%
   );
   clip-path: polygon(100% 0, 0 0, 100% 100%);
   opacity: 0.92;
@@ -1716,10 +1715,9 @@ html.lenis body {
   border-radius: 9999px;
   background: linear-gradient(
     90deg,
-    var(--tm-orange) 0%,
-    var(--tm-orange) 42%,
-    var(--tm-green) 58%,
-    var(--tm-green) 100%
+    var(--tm-green-deep) 0%,
+    var(--tm-green) 55%,
+    var(--tm-gold-soft) 100%
   );
   opacity: 0.85;
   transform-origin: center;

@@ -20,47 +20,42 @@ export function SiteFooter() {
       ).matches;
       if (reduced) return;
 
-      // Dramatic curtain reveal of the two-tone footer
-      gsap.fromTo(
-        ".f-panel",
-        { clipPath: "inset(100% 0% 0% 0%)" },
-        {
-          clipPath: "inset(0% 0% 0% 0%)",
-          duration: 1.4,
-          ease: "expo.out",
-          stagger: 0.12,
-          scrollTrigger: { trigger: root.current, start: "top 88%" },
-        }
-      );
+      gsap.set(".f-panel", { clipPath: "inset(100% 0% 0% 0%)" });
+      gsap.set(".f-mark", { y: 28, opacity: 0 });
+      gsap.set(".f-item", { y: 18, opacity: 0 });
 
-      gsap.from(".f-mark", {
-        yPercent: 60,
-        opacity: 0,
-        duration: 1.4,
-        ease: "expo.out",
-        scrollTrigger: { trigger: root.current, start: "top 72%" },
-      });
-      gsap.from(".f-item", {
-        y: 24,
-        opacity: 0,
-        duration: 0.9,
-        ease: "expo.out",
-        stagger: 0.1,
-        scrollTrigger: { trigger: root.current, start: "top 62%" },
-      });
-
-      // Slow parallax drift on the oversized wordmark
-      gsap.to(".f-mark", {
-        yPercent: -14,
-        ease: "none",
-        scrollTrigger: {
-          trigger: root.current,
-          start: "top bottom",
-          end: "bottom bottom",
-          scrub: true,
-        },
-      });
-
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top bottom",
+            end: "top 38%",
+            scrub: 0.9,
+          },
+        })
+        .fromTo(
+          ".f-panel",
+          { clipPath: "inset(100% 0% 0% 0%)" },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: 0.45,
+            stagger: 0.06,
+            ease: "none",
+          },
+          0
+        )
+        .fromTo(
+          ".f-mark",
+          { y: 28, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.35, ease: "none" },
+          0.08
+        )
+        .fromTo(
+          ".f-item",
+          { y: 18, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.28, stagger: 0.04, ease: "none" },
+          0.12
+        );
     },
     { scope: root }
   );

@@ -11,13 +11,13 @@ export const LENIS_LERP_TOUCH = 0.1;
 export const LENIS_SCROLL_DURATION = 1.4;
 
 /**
- * ScrollTrigger scrub for pinned horizontal scenes — one value sitewide so
- * Lenis hand-off feels identical in craft, chef, and gathering tracks.
+ * ScrollTrigger scrub for pinned horizontal scenes — low values keep the track
+ * locked to scroll position when the user stops (no long catch-up snap).
  */
-export const HORIZONTAL_SCRUB = 4.35;
+export const HORIZONTAL_SCRUB = 0.85;
 
-/** Moderate scrub on touch — smooth without feeling stuck */
-export const HORIZONTAL_SCRUB_TOUCH = 2.75;
+/** Slightly tighter on touch so momentum does not overshoot panels */
+export const HORIZONTAL_SCRUB_TOUCH = 0.65;
 
 /** Default scrub for vertical parallax / drift tied to Lenis */
 export const VERTICAL_SCRUB = 1.15;
@@ -33,8 +33,8 @@ export function getLenisLerp() {
   return LENIS_LERP;
 }
 
-/** Extra scroll stretch for the gathering horizontal — linear scrub runway */
-export const GATHERING_SCROLL_STRETCH = 1.22;
+/** Gathering track uses the same distance as measured — no extra stretch */
+export const GATHERING_SCROLL_STRETCH = 1;
 
 export function getHorizontalScrub() {
   if (typeof window === "undefined") return HORIZONTAL_SCRUB;
